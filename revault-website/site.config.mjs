@@ -2,7 +2,8 @@
 export default {
   name: 'Revault',
   // The production origin, used for canonical tags, hreflang, the sitemap and structured data.
-  siteUrl: 'https://www.revault.example',
+  // Today this is the Cloudflare address the site is served from. Replace it when a domain is connected.
+  siteUrl: 'https://revault.querovincent.workers.dev',
   // Languages that are actually built. Add 'de' and 'fr' once those translations exist under src/content.
   locales: ['en', 'de', 'fr'],
   // Where the booking form posts. '#' keeps the form inert and tells the visitor so.
