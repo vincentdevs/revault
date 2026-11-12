@@ -1,0 +1,11 @@
+{
+  // Cloudflare Workers static hosting for the built site. `npm run deploy` builds, then uploads dist/.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "revault",
+  "compatibility_date": "2026-11-10",
+  "assets": {
+    "directory": "dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

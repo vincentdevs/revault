@@ -331,6 +331,8 @@ for (const l of config.locales) {
 writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemaps.map(([l]) => `  <sitemap><loc>${abs(`/sitemap-${l}.xml`)}</loc></sitemap>`).join('\n')}\n</sitemapindex>\n`);
 writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${abs('/sitemap.xml')}\n`);
 
+// While the origin is still the placeholder, any hosted copy is a preview, so search engines are told to stay out.
+if (/\.example/.test(config.siteUrl)) writeFileSync(join(out, '_headers'), '/*\n  X-Robots-Tag: noindex\n');
 if (/\.example/.test(config.siteUrl)) warn('site.config.mjs: siteUrl is still the placeholder origin');
 if (config.formEndpoint === '#') warn('site.config.mjs: formEndpoint is unset, so the booking form sends nothing');
 if (!config.calendarUrl) warn('site.config.mjs: calendarUrl is unset, so no calendar link shows under the form');
