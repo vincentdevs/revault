@@ -60,6 +60,8 @@ export default {
     consentLink: 'Datenschutzerklärung',
     send: 'Anfrage senden',
     offline: 'Dieses Formular ist noch mit keinem Postfach verbunden. Es wurde nichts gesendet.',
+    sending: 'Ihre Anfrage wird gesendet',
+    failed: 'Ihre Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es in einem Moment erneut.',
     calendar: 'Termin im Kalender wählen',
   },
   hero: {

@@ -60,6 +60,8 @@ export default {
     consentLink: 'déclaration de protection des données',
     send: 'Envoyer la demande',
     offline: "Ce formulaire n'est pas encore relié à une boîte de réception : rien n'a été envoyé.",
+    sending: 'Envoi de votre demande',
+    failed: "Votre demande n'a pas pu être envoyée. Veuillez réessayer dans un instant.",
     calendar: "Choisir un créneau dans l'agenda",
   },
   hero: {

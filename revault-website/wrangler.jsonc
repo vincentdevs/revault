@@ -1,11 +1,21 @@
 {
-  // Cloudflare Workers static hosting for the built site. `npm run deploy` builds, then uploads dist/.
+  // Cloudflare Workers hosting for the built site. `npm run deploy` builds, then uploads dist/.
+  // The Worker script runs only for /api/*; every other path is served straight from dist/.
+  // NOTIFY_EMAIL is a secret, so the inbox address never appears in this public repository:
+  //   npx wrangler secret put NOTIFY_EMAIL
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "revault",
   "compatibility_date": "2026-11-10",
+  "main": "worker/index.js",
   "assets": {
     "directory": "dist",
+    "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
-    "not_found_handling": "404-page"
-  }
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  // Every booking request is stored here first (EU jurisdiction), then relayed by email.
+  "d1_databases": [
+    { "binding": "LEADS", "database_name": "revault-leads", "database_id": "806c08dd-335c-4c29-9756-0ccf8399bbf2" }
+  ]
 }

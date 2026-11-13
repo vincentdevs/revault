@@ -6,8 +6,8 @@ export default {
   siteUrl: 'https://revault.querovincent.workers.dev',
   // Languages that are actually built. Add 'de' and 'fr' once those translations exist under src/content.
   locales: ['en', 'de', 'fr'],
-  // Where the booking form posts. '#' keeps the form inert and tells the visitor so.
-  formEndpoint: '#',
+  // Where the booking form posts: the Worker in worker/index.js. '#' keeps the form inert and tells the visitor so.
+  formEndpoint: '/api/book',
   // Booking calendar shown under the form once it exists.
   calendarUrl: '',
   // Verified profiles only, used for Organization sameAs.

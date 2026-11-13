@@ -7,7 +7,9 @@ import enPages from './src/content/index.mjs';
 import en from './src/i18n/en.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
-const out = join(root, 'dist');
+// THEME=v2 builds the second design into dist-v2: the same pages, with src/styles-v2.css layered over src/styles.css.
+const THEME = process.env.THEME || '';
+const out = join(root, THEME ? `dist-${THEME}` : 'dist');
 const warnings = [];
 const warn = (m) => warnings.push(m);
 const abs = (p) => config.siteUrl.replace(/\/$/, '') + p;
@@ -110,7 +112,9 @@ const blocks = {
   faq: (b) => `<div class="split" data-reveal><div><h2>${esc(b.h2 || T.faqHeading)}</h2></div><div class="faq">${b.items.map((i) => `<details><summary>${esc(i.q)}</summary><p>${i.a}</p></details>`).join('')}</div></div>`,
   prose: (b) => `<div class="prose" data-reveal>${b.html}</div>`,
   form: (b) => `<div class="split split--even" data-reveal><div class="stack"><h2>${esc(b.h2)}</h2>${paras(b.body)}${config.calendarUrl ? `<p><a class="textlink" href="${config.calendarUrl}">${esc(T.form.calendar)}</a></p>` : ''}</div>
-  <form class="form" data-booking data-offline="${esc(T.form.offline)}" method="post" action="${config.formEndpoint}">
+  <form class="form" data-booking data-offline="${esc(T.form.offline)}" data-sending="${esc(T.form.sending)}" data-failed="${esc(T.form.failed)}" method="post" action="${config.formEndpoint}">
+    <input type="hidden" name="lang" value="${LOC}"><input type="hidden" name="page" value="${lp('/book-a-diagnostic/')}"><input type="hidden" name="consent_text" value="${esc(T.form.consent.replace('{privacy}', T.form.consentLink))}">
+    <div class="hp" aria-hidden="true"><label for="f-website">Website</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
     <div><label for="f-name">${esc(T.form.name)}</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
     <div><label for="f-email">${esc(T.form.email)}</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
     <div><label for="f-company">${esc(T.form.company)}</label><input id="f-company" name="company" type="text" autocomplete="organization" required></div>
@@ -281,6 +285,10 @@ rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, 'assets/fonts'), { recursive: true });
 for (const f of ['styles.css', 'site.js', 'logo.svg', 'wordmark.svg', 'logo-full.svg', 'logo-full-light.svg']) copyFileSync(join(root, 'src', f), join(out, 'assets', f));
 copyFileSync(join(root, 'node_modules/@fontsource-variable/red-hat-display/files/red-hat-display-latin-wght-normal.woff2'), join(out, 'assets/fonts/red-hat-display.woff2'));
+if (THEME) {
+  writeFileSync(join(out, 'assets/styles.css'), readFileSync(join(root, 'src/styles.css'), 'utf8') + '\n' + readFileSync(join(root, `src/styles-${THEME}.css`), 'utf8'));
+  copyFileSync(join(root, 'node_modules/@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2'), join(out, 'assets/fonts/archivo.woff2'));
+}
 copyFileSync(join(root, 'node_modules/@fontsource-variable/red-hat-text/files/red-hat-text-latin-wght-normal.woff2'), join(out, 'assets/fonts/red-hat-text.woff2'));
 
 const DICT = { en };
@@ -332,7 +340,8 @@ writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\
 writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${abs('/sitemap.xml')}\n`);
 
 // While the origin is still the placeholder, any hosted copy is a preview, so search engines are told to stay out.
-if (/\.example/.test(config.siteUrl)) writeFileSync(join(out, '_headers'), '/*\n  X-Robots-Tag: noindex\n');
+// The same holds for a themed build, which is a design preview of the live site.
+if (THEME || /\.example/.test(config.siteUrl)) writeFileSync(join(out, '_headers'), '/*\n  X-Robots-Tag: noindex\n');
 if (/\.example/.test(config.siteUrl)) warn('site.config.mjs: siteUrl is still the placeholder origin');
 if (config.formEndpoint === '#') warn('site.config.mjs: formEndpoint is unset, so the booking form sends nothing');
 if (!config.calendarUrl) warn('site.config.mjs: calendarUrl is unset, so no calendar link shows under the form');

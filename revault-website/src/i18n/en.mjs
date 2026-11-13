@@ -60,6 +60,8 @@ export default {
     consentLink: 'privacy notice',
     send: 'Send request',
     offline: 'This form is not connected to an inbox yet, so nothing was sent.',
+    sending: 'Sending your request',
+    failed: 'Your request could not be sent. Please try again in a moment.',
     calendar: 'Pick a time in the calendar',
   },
   hero: {

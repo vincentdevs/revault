@@ -1,12 +1,12 @@
-// Local preview server for dist/, with clean URLs and the 404 page.
+// Local preview server with clean URLs and the 404 page. Serves dist/ by default, or the folder named as the first argument (dist-v2).
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const dist = join(dirname(fileURLToPath(import.meta.url)), 'dist');
-const port = Number(process.env.PORT || 4321);
+const dist = join(dirname(fileURLToPath(import.meta.url)), process.argv[2] || 'dist');
+const port = Number(process.argv[3] || process.env.PORT || 4321);
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.xml': 'application/xml', '.txt': 'text/plain' };
 
 createServer(async (req, res) => {

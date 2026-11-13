@@ -490,6 +490,9 @@ tbody th { font-family: var(--display); font-weight: 600; white-space: nowrap; }
 .form .btn { justify-self: start; }
 .form-status { font-weight: 600; color: var(--accent-ink); }
 .form-status:empty { display: none; }
+/* Bots fill every field; people never see this one */
+.hp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.form button[disabled] { opacity: 0.6; cursor: progress; }
 
 /* Closing call to action: a plain dark card, text on the left and one button on the right */
 .cta { display: grid; gap: 28px 72px; align-items: center; padding: clamp(40px, 5.5vw, 72px); border-radius: 28px; background: var(--deep-2); }

@@ -27,13 +27,30 @@ if ('IntersectionObserver' in window) {
   targets.forEach((t) => t.classList.add('is-in'));
 }
 
-// The booking form posts to the endpoint set in site.config.mjs. Until one is set, say so plainly.
+// The booking form posts to the endpoint set in site.config.mjs (the Worker at /api/book) and then opens the thanks page.
+// Until an endpoint is set, it says so plainly.
 const form = document.querySelector('form[data-booking]');
 if (form) {
-  form.addEventListener('submit', (e) => {
+  const status = form.querySelector('.form-status');
+  const button = form.querySelector('button[type="submit"]');
+  form.addEventListener('submit', async (e) => {
     if (form.getAttribute('action') === '#') {
       e.preventDefault();
-      form.querySelector('.form-status').textContent = form.dataset.offline;
+      status.textContent = form.dataset.offline;
+      return;
+    }
+    if (!window.fetch || !window.FormData) return; // the browser posts the form itself
+    e.preventDefault();
+    button.disabled = true;
+    status.textContent = form.dataset.sending;
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { accept: 'application/json' } });
+      const out = await res.json();
+      if (!res.ok || !out.ok) throw new Error(out.error || 'failed');
+      window.location.assign(out.next);
+    } catch (err) {
+      button.disabled = false;
+      status.textContent = form.dataset.failed;
     }
   });
 }

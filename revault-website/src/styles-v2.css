@@ -1,0 +1,146 @@
+/* Revault, version 2. Layered over styles.css by `npm run build:v2`.
+   Same palette, same pages. What changes: headlines are set in Archivo, heavy and plain to read,
+   shapes are cut square, the hero is plain Ink Black with one faint glow, section heads split into two columns,
+   the closing block is solid Lavender and the footer ends on the wordmark at full width. */
+@font-face { font-family: "Archivo"; src: url("/assets/fonts/archivo.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+
+:root {
+  --display: "Archivo", "Red Hat Display", system-ui, sans-serif;
+  --radius: 6px;
+  --radius-s: 4px;
+}
+::selection { background: var(--accent); color: var(--deep); }
+
+/* Headlines: heavy, at a width just under normal, with open enough spacing to read at a glance */
+h1, h2, h3, h4 { font-stretch: 96%; font-weight: 800; }
+h2 { font-size: clamp(30px, 3.6vw, 48px); line-height: 1.1; letter-spacing: -0.02em; }
+h3 { font-size: clamp(21px, 1.8vw, 25px); line-height: 1.22; letter-spacing: 0; font-weight: 700; }
+.hero h1 { font-size: clamp(40px, 4vw, 58px); line-height: 1.06; letter-spacing: -0.022em; font-weight: 800; }
+.showcase-txt h3 { font-size: clamp(26px, 2.4vw, 32px); line-height: 1.16; font-weight: 800; letter-spacing: -0.015em; }
+.site-footer h2 { font-stretch: 100%; font-weight: 600; }
+.nav-menu strong, .mock-title, .mock-who strong, .mock-grid li, .mock-checks li, .mock-foot, .mock-done, .faq summary { font-stretch: 100%; }
+
+/* Buttons stay flat and plain, with squared corners */
+.btn, .btn:focus-visible { border-radius: 4px; }
+.btn { font-stretch: 100%; font-weight: 700; letter-spacing: 0; }
+.btn--lg { border-radius: 4px; }
+
+/* Header */
+.nav-group::before { border-radius: 6px; }
+.nav-link { border-radius: 3px; }
+.nav-menu { border-radius: 8px; }
+.nav-menu a { border-radius: 4px; }
+
+/* Hero: plain Ink Black with one faint Lavender glow behind the product card */
+.hero { background: var(--deep); }
+.hero::before { content: none; }
+.hero::after { content: ""; position: absolute; z-index: -1; right: -10%; top: 8%; width: 55%; height: 80%; background: radial-gradient(closest-side, rgba(170, 125, 206, 0.16), rgba(170, 125, 206, 0)); pointer-events: none; }
+.hero-sub { font-size: 19px; }
+
+/* Section heads: headline on the left, its sentence on the right, both sitting on one baseline */
+.band-head { max-width: none; }
+.band-head h2 { max-width: 16em; }
+@media (min-width: 960px) {
+  .band-head:has(p) { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 72px; align-items: end; }
+  .band-head:has(p) p { margin-top: 0; padding-bottom: 0.2em; }
+}
+.band-head + * { margin-top: 56px; }
+
+/* Surfaces: square corners and hairlines in place of soft rounded glass */
+.features { border-radius: 8px; box-shadow: none; }
+.feature { border-radius: 4px; }
+.tile { border-radius: 4px; }
+.card { border-radius: 6px; }
+.flow { border-radius: 8px; }
+.flow-node { border-radius: 4px; }
+.viz-card { border-radius: 10px; }
+.mock { border-radius: 8px; }
+.mock-stage { border-radius: 10px; }
+.mock-grid li, .mock-done { border-radius: 4px; }
+.mock-ico { border-radius: 4px; }
+.pill { border-radius: 4px; }
+.table-wrap { border-radius: 6px; }
+.form input[type="text"], .form input[type="email"], .form textarea { border-radius: 4px; }
+.lang a { border-radius: 4px; }
+
+/* Process rail: the markers are diamonds, not dots */
+.rail li::after { border-radius: 0; width: 12px; height: 12px; top: 1px; left: 1px; transform: rotate(45deg); box-shadow: 0 0 0 5px rgba(170, 125, 206, 0.22); }
+
+/* Closing block: solid Lavender, Ink Black type, Ink Black button */
+.cta, .cta.on-dark { border-radius: 8px; background: var(--accent); color: var(--deep); }
+.cta.on-dark .muted { color: rgba(13, 19, 33, 0.82); }
+.cta .btn--primary { background: var(--deep); color: #ffffff; }
+.cta .btn--primary:hover { background: var(--deep-2); }
+.cta .btn:focus-visible { outline-color: var(--deep); }
+
+/* Footer: the wordmark closes the page at full width, as a quiet imprint */
+.site-footer { padding-bottom: 56px; }
+.site-footer::after { content: ""; display: block; width: min(var(--shell), 100% - 2 * var(--gutter)); margin: 56px auto 0; aspect-ratio: 448 / 71; background: rgba(243, 243, 244, 0.07);
+  -webkit-mask: url("/assets/wordmark.svg") center bottom / contain no-repeat; mask: url("/assets/wordmark.svg") center bottom / contain no-repeat; }
+
+/* ---- Motion: receipts, not decoration ----
+   Every input answers within 200ms: a button presses in, a link card lifts, a field lights its border,
+   a box ticks. Anything that changes state (an answer opening, the menu, the form status) moves or
+   flashes as it changes, so the eye sees it before it reads it. Loops that only decorate are removed.
+   Everything here is CSS: no extra script, no extra download. */
+:root { --tap: 90ms; --quick: 160ms; --out: cubic-bezier(.2, .8, .2, 1); }
+
+/* Press: buttons and the menu button sink as the pointer goes down */
+.btn, .menu-btn, .lang a, .nav-link { transition: background-color var(--quick) ease, border-color var(--quick) ease, color var(--quick) ease, transform var(--tap) ease-out; }
+.btn:active, .menu-btn:active, .lang a:active, .nav-link:active { transform: translateY(1px) scale(.97); }
+
+/* Lift: anything that is a link to another page rises a little on hover and settles when pressed */
+a.feature, a.card { transition: background-color var(--quick) ease, border-color var(--quick) ease, transform var(--quick) var(--out), box-shadow var(--quick) ease; }
+a.feature:hover, a.card:hover { transform: translateY(-2px); }
+a.feature:active, a.card:active { transform: translateY(0) scale(.99); transition-duration: var(--tap); }
+.tile { transition: background-color var(--quick) ease, color var(--quick) ease; }
+.textlink { transition: text-decoration-thickness var(--quick) ease, color var(--quick) ease; }
+.nav-menu a { transition: background-color var(--quick) ease; }
+.nav-menu a:active { transform: scale(.98); }
+
+/* Fields: the border and ring answer focus at once; a ticked box pops once */
+.form input[type="text"], .form input[type="email"], .form textarea { transition: border-color var(--quick) ease, box-shadow var(--quick) ease; }
+.form input[type="text"]:focus, .form input[type="email"]:focus, .form textarea:focus { outline: none; border-color: var(--accent-ink); box-shadow: 0 0 0 3px rgba(138, 90, 189, 0.22); }
+.form .opt { cursor: pointer; }
+.form .opt input:checked { animation: tick var(--quick) var(--out); }
+@keyframes tick { 50% { transform: scale(1.18); } }
+
+/* Sending: the pressed button keeps its label and shows a spinner, so the wait is visible */
+.form button[disabled] { opacity: 1; position: relative; color: transparent; }
+.form button[disabled]::after { content: ""; position: absolute; inset: 0; margin: auto; width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.4); border-top-color: #ffffff; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+/* The status line flashes in when its message changes */
+.form-status:not(:empty) { animation: flash .6s ease-out; }
+@keyframes flash { 0% { opacity: 0; transform: translateY(-4px); background: rgba(170, 125, 206, 0.28); } 30% { opacity: 1; transform: none; } 100% { background: transparent; } }
+.form-status { padding: 6px 10px; margin-inline: -10px; border-radius: 4px; }
+
+/* Questions: the chevron turns and the answer slides in as it opens */
+.faq summary::after { transition: transform var(--quick) var(--out); }
+.faq details[open] > p { animation: open .22s var(--out); }
+@keyframes open { from { opacity: 0; transform: translateY(-6px); } }
+
+/* Phone menu: the panel drops in instead of appearing */
+@media (max-width: 1023px) { .header-nav.is-open { animation: open .2s var(--out); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Load: the hero text arrives line by line, short and quick, then stays put */
+  .js .hero-copy { animation: none; }
+  .js .hero-copy > * { animation: arrive .42s var(--out) both; }
+  .js .hero-copy > :nth-child(2) { animation-delay: .07s; }
+  .js .hero-copy > :nth-child(3) { animation-delay: .14s; }
+  .js .hero-copy > :nth-child(4) { animation-delay: .21s; }
+  .js .hero-media { animation: arrive .5s var(--out) .18s both; }
+  @keyframes arrive { from { opacity: 0; transform: translateY(10px); } }
+
+  /* Sections come in shorter and lighter than before */
+  .js [data-reveal]:not(.rail) { transform: translateY(10px); transition: opacity .4s ease, transform .4s var(--out); }
+
+  /* Decoration that never stops is cut: the funnel card stays still, the last diagram box stops pulsing.
+     The funnel's own sequence stays, because it explains how a buyer moves through the stages. */
+  .js .funnel, .js .hero-mock { animation: none; }
+  .js .is-in .flow .flow-node--end { animation: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+}
